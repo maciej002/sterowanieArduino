@@ -195,5 +195,110 @@
                 </ImageButton>
             </LinearLayout>
         </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
+                >
+
+                <ImageButton
+                    android:id="@+id/arrowHeadLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:padding="12dp"
+                    android:src="@mipmap/arrow_head_left">
+
+                </ImageButton>
+
+                <ImageButton
+                    android:id="@+id/arrowHeadRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:padding="12dp"
+                    android:src="@mipmap/arrow_head_right">
+
+                </ImageButton>
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <LinearLayout
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+
+
+                <ImageButton
+                    android:id="@+id/sound1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:padding="12dp"
+                    android:src="@mipmap/soud1">
+
+
+                </ImageButton>
+
+                <ImageButton
+                    android:id="@+id/sound2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:padding="12dp"
+                    android:src="@mipmap/soud2">
+
+
+                </ImageButton>
+
+                <ImageButton
+                    android:id="@+id/sound3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:padding="12dp"
+                    android:src="@mipmap/soud3">
+
+
+                </ImageButton>
+
+                <ImageButton
+                    android:id="@+id/sound4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:padding="12dp"
+                    android:src="@mipmap/soud4">
+
+
+                </ImageButton>
+
+                <ImageButton
+                    android:id="@+id/sound5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:padding="12dp"
+                    android:src="@mipmap/soud5">
+
+
+                </ImageButton>
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>
