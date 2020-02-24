@@ -75,44 +75,45 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // deklaracja elementów GUI
         mBluetoothStatus = (TextView)findViewById(R.id.bluetoothStatus);
-        mReadBuffer = (TextView) findViewById(R.id.readBuffer);
-        mScanBtn = (ImageButton)findViewById(R.id.scan);
-        mOffBtn = (ImageButton)findViewById(R.id.off);
-        mDiscoverBtn = (ImageButton)findViewById(R.id.discover);
+        mReadBuffer = (TextView) findViewById(R.id.readBuffer); // Tetowe pole odbioru transmisji z urządzenia
+        mScanBtn = (ImageButton)findViewById(R.id.scan); // przycisk skanowania urządzeń bluetooth
+        mOffBtn = (ImageButton)findViewById(R.id.off); // przycisk wyłączenia bluetooth
+        mDiscoverBtn = (ImageButton)findViewById(R.id.discover); // przycisk wyszukiwania
         arrowUP = (ImageButton)findViewById(R.id.Send1);
         arrowLeft = (ImageButton)findViewById(R.id.Send2);
         arrowStop = (ImageButton)findViewById(R.id.Send3);
         arrowRight = (ImageButton)findViewById(R.id.Send4);
         arrowDown = (ImageButton)findViewById(R.id.Send5);
-      //  mListPairedDevicesBtn = (ImageButton)findViewById(R.id.PairedBtn);
         mLED1 = (CheckBox)findViewById(R.id.checkboxLED1);
-
         mBTArrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
-        mBTAdapter = BluetoothAdapter.getDefaultAdapter(); // get a handle on the bluetooth radio
-
+        mBTAdapter = BluetoothAdapter.getDefaultAdapter(); // nie używane, checkbox testowy
         mDevicesListView = (ListView)findViewById(R.id.devicesListView);
-        mDevicesListView.setAdapter(mBTArrayAdapter); // assign model to view
-        mDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
-        // Ask for location permission if not already allowed
+
+        mDevicesListView.setAdapter(mBTArrayAdapter); // prtzypisanie adaptera do listy
+        mDevicesListView.setOnItemClickListener(mDeviceClickListener); // przypisanie akcji po kliknięciu w element listy
+
+        // Obsługa pytań o dostęp do bluetooth
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
 
 
+        // handler obsługujący komunikację z płytką, nadawanie i odbiór
         mHandler = new Handler(){
             public void handleMessage(android.os.Message msg){
                 if(msg.what == MESSAGE_READ){
                     String readMessage = null;
                     try {
-                        readMessage = new String((byte[]) msg.obj, "UTF-8");
+                        readMessage = new String((byte[]) msg.obj, "UTF-8"); // odczyt bufora przychodzących wiadomości
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
                     mReadBuffer.setText(readMessage);
                 }
 
-                if(msg.what == CONNECTING_STATUS){
+                if(msg.what == CONNECTING_STATUS){ // określanie statusu połaczenia
                     if(msg.arg1 == 1)
                         mBluetoothStatus.setText("Connected to Device: " + (String)(msg.obj));
                     else{
@@ -134,17 +135,18 @@ public class MainActivity extends AppCompatActivity {
           /*  mLED1.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-                    if(mConnectedThread != null) //First check to make sure thread created
+                    if(mConnectedThread != null) //
                         mConnectedThread.write("1");
                 }
             });*/
 
+            // akcja po kliknieciu w przycisk ruchu w przód
             arrowUP.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     if(mConnectedThread!= null){
-                        mConnectedThread.write("A");
+                        mConnectedThread.write("A"); //  przesłanie kodu ruchu do przodu do urządzenia
                     }
                 }
 
@@ -176,27 +178,29 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            // akcja po kliknieciu w przycisk ruchu w tył
             arrowDown.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(mConnectedThread != null){
-                        mConnectedThread.write("E");
+                        mConnectedThread.write("E"); //  przesłanie kodu ruchu do tyłu do urządzenia
                     }
                 }
             });
 
-
+            // akcja po kliknięciu w przycisk skanowania urządzeń
             mScanBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    bluetoothOn(v);
+                    bluetoothOn(v); //uruchomienie bluetooth
                 }
             });
 
+            // akcja po kliknięciu w przycisk wyłączenia bluetooth
             mOffBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-                    bluetoothOff(v);
+                    bluetoothOff(v); // wyłaczenie bluetooth
                 }
             });
 
@@ -207,15 +211,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             });*/
 
+         // akcja po kliknięciu w przycisk wyszukiwanie urządzeń
             mDiscoverBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-                    discover(v);
+                    discover(v); // uruchowmienie wyszukiwania
                 }
             });
         }
     }
 
+    // uruchamienie bluetooth
     private void bluetoothOn(View view){
         if (!mBTAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -247,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void discover(View view){
-        // Check if the device is already discovering
+        // jeśłi aktualnie nie wyszukujemy urządzeń - rozpocznij wyszukiweanie, w przeciwnym wypadku, zakończ wyszukiwanie
         if(mBTAdapter.isDiscovering()){
             mBTAdapter.cancelDiscovery();
             Toast.makeText(getApplicationContext(),"Discovery stopped",Toast.LENGTH_SHORT).show();
@@ -257,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
                 mBTArrayAdapter.clear(); // clear items
                 mBTAdapter.startDiscovery();
                 Toast.makeText(getApplicationContext(), "Discovery started", Toast.LENGTH_SHORT).show();
-                registerReceiver(blReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+                registerReceiver(blReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND)); // rejestracja znale4zionych urządzeń
             }
             else{
                 Toast.makeText(getApplicationContext(), "Bluetooth not on", Toast.LENGTH_SHORT).show();
@@ -265,6 +271,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // wypełnianie listy znalezionych urządzeń
     final BroadcastReceiver blReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -277,11 +284,12 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    // lista sparowanych urządzeń / nie wykorzystywane więcej
     private void listPairedDevices(View view){
         mBTArrayAdapter.clear();
         mPairedDevices = mBTAdapter.getBondedDevices();
         if(mBTAdapter.isEnabled()) {
-            // put it's one to the adapter
+            // tworzenie listy znalezionych urządzeń
             for (BluetoothDevice device : mPairedDevices)
                 mBTArrayAdapter.add(device.getName() + "\n" + device.getAddress());
 
@@ -291,8 +299,14 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Bluetooth not on", Toast.LENGTH_SHORT).show();
     }
 
+    // akcja po kliknięciu w element na liście - ustanawianie połączenia z urządzeniem
+    // 1) uruchamienia bt jeśli nie jest włączone,
+    // 2) pobieraqnie adrssu MAC urządzenia
+    // 3) uruchamienia wątku łączącego z wybranym urządzeniem
+    // 4) uruchamienia wątku komunikacyjnego
     private AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
+
 
             if(!mBTAdapter.isEnabled()) {
                 Toast.makeText(getBaseContext(), "Bluetooth not on", Toast.LENGTH_SHORT).show();
@@ -300,12 +314,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             mBluetoothStatus.setText("Connecting...");
-            // Get the device MAC address, which is the last 17 chars in the View
+            // Pobieranie adresu MAC
             String info = ((TextView) v).getText().toString();
             final String address = info.substring(info.length() - 17);
             final String name = info.substring(0,info.length() - 17);
 
-            // Spawn a new thread to avoid blocking the GUI one
+            // Uruchamienie wątku w celu unikknięcia blokady wątku głównego
             new Thread()
             {
                 public void run() {
@@ -319,24 +333,23 @@ public class MainActivity extends AppCompatActivity {
                         fail = true;
                         Toast.makeText(getBaseContext(), "Socket creation failed", Toast.LENGTH_SHORT).show();
                     }
-                    // Establish the Bluetooth socket connection.
+                    // ustyanawianie połaczenia z bluetooth
                     try {
                         mBTSocket.connect();
-                    } catch (IOException e) {
-                        try {
+
+                    } catch (IOException e) { // połaczenie nie udane, obsługa błedu
+                        try { //próba zamknięcia socketu po nieudanym połaczeniu
                             fail = true;
                             mBTSocket.close();
                             mHandler.obtainMessage(CONNECTING_STATUS, -1, -1)
                                     .sendToTarget();
-                        } catch (IOException e2) {
-                            //insert code to deal with this
+                        } catch (IOException e2) { // przechwycenie błedu po nie udanej próbie zamknięcia socketu
                             Toast.makeText(getBaseContext(), "Socket creation failed", Toast.LENGTH_SHORT).show();
                         }
                     }
-                    if(fail == false) {
+                    if(fail == false) {  // po udanym otworzeniu socketu uruchamiany jest wątek komunikacyjny
                         mConnectedThread = new ConnectedThread(mBTSocket);
                         mConnectedThread.start();
-
                         mHandler.obtainMessage(CONNECTING_STATUS, 1, -1, name)
                                 .sendToTarget();
                     }
@@ -355,6 +368,7 @@ public class MainActivity extends AppCompatActivity {
         return  device.createRfcommSocketToServiceRecord(BTMODULEUUID);
     }
 
+
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
@@ -365,8 +379,7 @@ public class MainActivity extends AppCompatActivity {
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
 
-            // Get the input and output streams, using temp objects because
-            // member streams are final
+            // pobieraqnie wejściowego i wyjściowego strumienia danych, w zmiennych tymczasowych ponieważ strumienie są final
             try {
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
@@ -377,38 +390,37 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void run() {
-            byte[] buffer = new byte[1024];  // buffer store for the stream
-            int bytes; // bytes returned from read()
-            // Keep listening to the InputStream until an exception occurs
+            byte[] buffer = new byte[1024];  // bufor strumienia danych
+            int bytes; // dane zwrócone z read()
+            // nasłuchiwanie strumienia
             while (true) {
                 try {
-                    // Read from the InputStream
+                    //odczyt z strumienia danych
                     bytes = mmInStream.available();
                     if(bytes != 0) {
                         buffer = new byte[1024];
-                        SystemClock.sleep(100); //pause and wait for rest of data. Adjust this depending on your sending speed.
-                        bytes = mmInStream.available(); // how many bytes are ready to be read?
-                        bytes = mmInStream.read(buffer, 0, bytes); // record how many bytes we actually read
+                        SystemClock.sleep(100); // oczekiwanie na resztę danych
+                        bytes = mmInStream.available();
+                        bytes = mmInStream.read(buffer, 0, bytes); // zapis z bufora
                         mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
-                                .sendToTarget(); // Send the obtained bytes to the UI activity
+                                .sendToTarget(); // przesładnie odebranej wiadomości do widoku
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-
                     break;
                 }
             }
         }
 
-        /* Call this from the main activity to send data to the remote device */
+        // Nadawanie wiadomości
         public void write(String input) {
-            byte[] bytes = input.getBytes();           //converts entered String into bytes
+            byte[] bytes = input.getBytes();  //konwersja tekstu na tablicę bajtów
             try {
-                mmOutStream.write(bytes);
+                mmOutStream.write(bytes); // przesłanie wiadomości
             } catch (IOException e) { }
         }
 
-        /* Call this from the main activity to shutdown the connection */
+       // porzucanie połączenia
         public void cancel() {
             try {
                 mmSocket.close();
