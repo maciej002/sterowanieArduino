@@ -48,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton arrowRight;
     private ImageButton arrowStop;
     private ImageButton arrowDown;
+    private ImageButton sound1;
+    private ImageButton sound2;
+    private ImageButton sound3;
+    private ImageButton sound4;
+    private ImageButton sound5;
+    private ImageButton arrowHeadRight;
+    private ImageButton arrowHeadLeft;
 
     private BluetoothAdapter mBTAdapter;
     private Set<BluetoothDevice> mPairedDevices;
@@ -86,6 +93,15 @@ public class MainActivity extends AppCompatActivity {
         arrowStop = (ImageButton)findViewById(R.id.Send3);
         arrowRight = (ImageButton)findViewById(R.id.Send4);
         arrowDown = (ImageButton)findViewById(R.id.Send5);
+        sound1 = (ImageButton)findViewById(R.id.sound1);
+        sound2 = (ImageButton)findViewById(R.id.sound2);
+        sound3 = (ImageButton)findViewById(R.id.sound3);
+        sound4 = (ImageButton)findViewById(R.id.sound4);
+        sound5 = (ImageButton)findViewById(R.id.sound5);
+        arrowHeadLeft = (ImageButton)findViewById(R.id.arrowHeadLeft);
+        arrowHeadRight = (ImageButton)findViewById(R.id.arrowHeadRight);
+
+
         mLED1 = (CheckBox)findViewById(R.id.checkboxLED1);
         mBTArrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
         mBTAdapter = BluetoothAdapter.getDefaultAdapter(); // nie używane, checkbox testowy
@@ -184,6 +200,63 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     if(mConnectedThread != null){
                         mConnectedThread.write("E"); //  przesłanie kodu ruchu do tyłu do urządzenia
+                    }
+                }
+            });
+            arrowHeadRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mConnectedThread !=null){
+                        mConnectedThread.write("F");
+                    }
+                }
+            });
+
+            arrowHeadRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mConnectedThread !=null){
+                        mConnectedThread.write("G");
+                    }
+                }
+            });
+            arrowHeadRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mConnectedThread !=null){
+                        mConnectedThread.write("H");
+                    }
+                }
+            });
+            arrowHeadRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mConnectedThread !=null){
+                        mConnectedThread.write("I");
+                    }
+                }
+            });
+            arrowHeadRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mConnectedThread !=null){
+                        mConnectedThread.write("J");
+                    }
+                }
+            });
+            arrowHeadRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mConnectedThread !=null){
+                        mConnectedThread.write("K");
+                    }
+                }
+            });
+            arrowHeadRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mConnectedThread !=null){
+                        mConnectedThread.write("L");
                     }
                 }
             });
